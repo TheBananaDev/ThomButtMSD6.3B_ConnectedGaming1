@@ -14,6 +14,8 @@ public class Task5GameManager : MonoBehaviour
     void Start()
     {
         canvManInst = gameObject.GetComponent<Task5CanvasManager>();
+        player1.SetActive(false);
+        player2.SetActive(false);
     }
 
     // Update is called once per frame
