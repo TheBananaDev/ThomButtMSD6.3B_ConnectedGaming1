@@ -8,14 +8,19 @@ using Firebase.Extensions;
 public class Task5Database : MonoBehaviour
 {
     DatabaseReference reference;
-    
+    private Task5CanvasManager canvManInst;
+
     private string key1;
     private string key2;
+
+    public Vector2 playerPos1;
+    public Vector2 playerPos2;
 
     // Start is called before the first frame update
     void Start()
     {
         reference = FirebaseDatabase.DefaultInstance.RootReference;
+        canvManInst = gameObject.GetComponent<Task5CanvasManager>();
     }
 
     private void OnApplicationQuit()
@@ -46,6 +51,63 @@ public class Task5Database : MonoBehaviour
         string json = JsonUtility.ToJson(player);
         key2 = reference.Child("Objects").Push().Key;
         reference.Child("Objects").Child(key2).SetRawJsonValueAsync(json);
+    }
+
+    //Method to check if the player is created in the database already
+    public void checkIfPlayerExists()
+    {
+        FirebaseDatabase.DefaultInstance.GetReference("Objects").GetValueAsync().ContinueWithOnMainThread(task => {
+             if (task.IsFaulted)
+             {
+                Debug.Log("Error when getting values from database");
+             }
+             else if (task.IsCompleted)
+             {
+                DataSnapshot snapshot = task.Result;
+                if (snapshot.Value != null)
+                {
+                    canvManInst.playerExists = true;
+                }
+                else
+                {
+                    canvManInst.playerExists = false;
+                }
+             }
+         });
+    }
+
+    //Methods to get the positions of the players
+    public void getPosPlayer1()
+    {
+        FirebaseDatabase.DefaultInstance.GetReference("Objects/"+key1+"/instPos").GetValueAsync().ContinueWithOnMainThread(task => {
+            if (task.IsFaulted)
+            {
+                Debug.Log("Error when getting values from database");
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                Debug.Log(snapshot.Value);
+
+                playerPos1.x = (float)snapshot.Value;
+            }
+        });
+    }
+    public void getPosPlayer2()
+    {
+        FirebaseDatabase.DefaultInstance.GetReference("Objects/" + key2 + "/instPos").GetValueAsync().ContinueWithOnMainThread(task => {
+            if (task.IsFaulted)
+            {
+                Debug.Log("Error when getting values from database");
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                Debug.Log(snapshot.Value);
+
+                playerPos2.x = (float)snapshot.Value;
+            }
+        });
     }
 
     //Method to update the position whilst the game is running

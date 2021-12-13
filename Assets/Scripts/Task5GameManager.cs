@@ -10,6 +10,7 @@ public class Task5GameManager : MonoBehaviour
     private float player1PivotPos;
     private float player2PivotPos;
 
+    public Vector2 databasePos;
     private Task5CanvasManager canvManInst;
     private Task5Database database;
 
@@ -58,6 +59,7 @@ public class Task5GameManager : MonoBehaviour
         pos[0] = player2.transform.position.x;
         pos[1] = player2.transform.position.y;
         database.addPlayer2("Square", pos, System.DateTime.Now.ToString());
+        StartCoroutine(updatePlayer2Pos());
     }
 
     //Sets which player will be controlled in this instance
@@ -66,10 +68,12 @@ public class Task5GameManager : MonoBehaviour
         if (play == false)
         {
             Destroy(player2.GetComponent<PlayerControl>());
+            StartCoroutine(moveDatabasePlayer2());
         }
         else if (play == true)
         {
             Destroy(player1.GetComponent<PlayerControl>());
+            StartCoroutine(moveDatabasePlayer1());
         }
     }
 
@@ -93,6 +97,28 @@ public class Task5GameManager : MonoBehaviour
             pos[0] = player2.transform.position.x;
             pos[1] = player2.transform.position.y;
             database.updatePosPlayer2(pos);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    //Coroutine that moves the players using the database position
+    private IEnumerator moveDatabasePlayer1()
+    {
+        while (canvManInst.currState == 2)
+        {
+            database.getPosPlayer1();
+            Vector2 pos = database.playerPos1;
+            player1.GetComponent<Rigidbody2D>().velocity = new Vector3(4f * pos.x, 4f * pos.y);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+    private IEnumerator moveDatabasePlayer2()
+    {
+        while (canvManInst.currState == 2)
+        {
+            database.getPosPlayer2();
+            Vector2 pos = database.playerPos2;
+            player2.GetComponent<Rigidbody2D>().velocity = new Vector3(4f * pos.x, 4f * pos.y);
             yield return new WaitForSeconds(0.1f);
         }
     }

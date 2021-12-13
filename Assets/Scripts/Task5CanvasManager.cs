@@ -1,14 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Task5CanvasManager : MonoBehaviour
 {
     private GameObject canv;
-    private GameObject but1;
-    private GameObject but2;
     private GameObject score1;
     private GameObject score2;
     private GameObject winner;
@@ -20,6 +16,7 @@ public class Task5CanvasManager : MonoBehaviour
 
     [System.NonSerialized]
     public int currState;
+    public bool playerExists;
 
     private const string score1Text = "Player 1 Score: ";
     private const string score2Text = "Player 2 Score: ";
@@ -32,8 +29,6 @@ public class Task5CanvasManager : MonoBehaviour
     {
         //Gets a reference to all important UI elements
         canv = GameObject.Find("Canvas");
-        but1 = canv.transform.Find("MainMenu").Find("Player1But").gameObject;
-        but2 = canv.transform.Find("MainMenu").Find("Player2But").gameObject;
         waiting = canv.transform.Find("GameplayMenu").Find("Waiting").gameObject;
         score1 = canv.transform.Find("GameplayMenu").Find("Player1Score").gameObject;
         score2 = canv.transform.Find("GameplayMenu").Find("Player2Score").gameObject;
@@ -41,6 +36,8 @@ public class Task5CanvasManager : MonoBehaviour
 
         database = gameObject.GetComponent<Task5Database>();
         gameMan = gameObject.GetComponent<Task5GameManager>();
+
+        StartCoroutine(checkPlayerExists());
 
         //Ensures we start with the main menu
         ChangeMenu(0);
@@ -53,6 +50,7 @@ public class Task5CanvasManager : MonoBehaviour
         score1.GetComponent<TextMeshProUGUI>().text = score1Text + player1Score.ToString();
         score2.GetComponent<TextMeshProUGUI>().text = score2Text + player2Score.ToString();
 
+        //Sets the correct display depending on who won
         if (player1Score > 10)
         {
             playerWin = "Player 1";
@@ -110,7 +108,7 @@ public class Task5CanvasManager : MonoBehaviour
                 canv.transform.Find("GameplayMenu").gameObject.SetActive(false);
                 canv.transform.Find("EndMenu").gameObject.SetActive(true);
 
-                score1.GetComponent<TextMeshProUGUI>().text = playerWin;
+                winner.GetComponent<TextMeshProUGUI>().text = playerWin;
                 currState = 3;
                 gameMan.displayPlayers(false, false);
                 break;
@@ -130,6 +128,28 @@ public class Task5CanvasManager : MonoBehaviour
         else
         {
             player2Score++;
+        }
+    }
+
+    private IEnumerator checkPlayerExists()
+    {
+        while (true)
+        {
+            database.checkIfPlayerExists();
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    //Method to start the game and swap to the appropriate scene depending on whether both players have connected
+    public void startGame()
+    {
+        if (playerExists == false)
+        {
+            ChangeMenu(1);
+        }
+        else
+        {
+            ChangeMenu(2);
         }
     }
 }

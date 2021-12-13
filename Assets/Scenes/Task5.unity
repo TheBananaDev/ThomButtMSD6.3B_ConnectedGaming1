@@ -156,6 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1: {fileID: 2020761898}
   player2: {fileID: 164376443}
+  databasePos: {x: 0, y: 0}
 --- !u!4 &49198722
 Transform:
   m_ObjectHideFlags: 0
@@ -182,6 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc603a650c63714689b7529b9313b34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerExists: 0
 --- !u!114 &49198724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,6 +196,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23ea14ea59e32dc448b826777c2b6c45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPos1: {x: 0, y: 0}
+  playerPos2: {x: 0, y: 0}
 --- !u!1 &164376443
 GameObject:
   m_ObjectHideFlags: 0
@@ -1110,6 +1114,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 49198723}
+        m_TargetAssemblyTypeName: Task5CanvasManager, Assembly-CSharp
+        m_MethodName: startGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &998231003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1979,6 +1995,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: Task5GameManager, Assembly-CSharp
         m_MethodName: setActivePlayer
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 49198723}
+        m_TargetAssemblyTypeName: Task5CanvasManager, Assembly-CSharp
+        m_MethodName: startGame
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
