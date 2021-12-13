@@ -24,6 +24,9 @@ public class Task5CanvasManager : MonoBehaviour
     private const string score1Text = "Player 1 Score: ";
     private const string score2Text = "Player 2 Score: ";
 
+    private Task5Database database;
+    private Task5GameManager gameMan;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +38,9 @@ public class Task5CanvasManager : MonoBehaviour
         score1 = canv.transform.Find("GameplayMenu").Find("Player1Score").gameObject;
         score2 = canv.transform.Find("GameplayMenu").Find("Player2Score").gameObject;
         winner = canv.transform.Find("EndMenu").Find("Winner").gameObject;
+
+        database = gameObject.GetComponent<Task5Database>();
+        gameMan = gameObject.GetComponent<Task5GameManager>();
 
         //Ensures we start with the main menu
         ChangeMenu(0);
@@ -71,6 +77,7 @@ public class Task5CanvasManager : MonoBehaviour
                 canv.transform.Find("EndMenu").gameObject.SetActive(false);
 
                 currState = 0;
+                gameMan.displayPlayers(false, false);
                 break;
             //Waiting
             case 1:
@@ -95,6 +102,7 @@ public class Task5CanvasManager : MonoBehaviour
                 score2.SetActive(true);
 
                 currState = 2;
+                gameMan.displayPlayers(true, true);
                 break;
             //Ending
             case 3:
@@ -104,6 +112,7 @@ public class Task5CanvasManager : MonoBehaviour
 
                 score1.GetComponent<TextMeshProUGUI>().text = playerWin;
                 currState = 3;
+                gameMan.displayPlayers(false, false);
                 break;
             default:
                 Debug.Log("Menu number doesn't exist");

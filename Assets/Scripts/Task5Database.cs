@@ -3,22 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase;
 using Firebase.Database;
+using Firebase.Extensions;
 
 public class Task5Database : MonoBehaviour
 {
     DatabaseReference reference;
+    
+    private string key1;
+    private string key2;
 
     // Start is called before the first frame update
     void Start()
     {
         reference = FirebaseDatabase.DefaultInstance.RootReference;
-        addNewPlayer();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void OnApplicationQuit()
@@ -31,21 +28,34 @@ public class Task5Database : MonoBehaviour
     {
         PlayerData player = new PlayerData();
         string json = JsonUtility.ToJson(player);
-        reference.Child("Objects").Child("Player").SetRawJsonValueAsync(json);
+        key1 = reference.Child("Objects").Push().Key;
+        reference.Child("Objects").Child(key1).SetRawJsonValueAsync(json);
     }
 
-    //Method to add a new player with values
-    public void addNewPlayer(string i, string s, double[] p, string t)
+    //Method to add the appropriate player with values
+    public void addPlayer1(string s, double[] p, string t)
     {
-        PlayerData player = new PlayerData(i, s, p, t);
+        PlayerData player = new PlayerData("Player 1", s, p, t);
         string json = JsonUtility.ToJson(player);
-        reference.Child("Objects").Child(i).SetRawJsonValueAsync(json);
+        key1 = reference.Child("Objects").Push().Key;
+        reference.Child("Objects").Child(key1).SetRawJsonValueAsync(json);
+    }
+    public void addPlayer2(string s, double[] p, string t)
+    {
+        PlayerData player = new PlayerData("Player 2", s, p, t);
+        string json = JsonUtility.ToJson(player);
+        key2 = reference.Child("Objects").Push().Key;
+        reference.Child("Objects").Child(key2).SetRawJsonValueAsync(json);
     }
 
     //Method to update the position whilst the game is running
-    private void updatePos()
+    public void updatePosPlayer1(double[] pos)
     {
-
+        reference.Child("Objects").Child(key1).Child("instPos").SetValueAsync(pos);
+    }
+    public void updatePosPlayer2(double[] pos)
+    {
+        reference.Child("Objects").Child(key2).Child("instPos").SetValueAsync(pos);
     }
 
     //Method to delete the players once the games stops
